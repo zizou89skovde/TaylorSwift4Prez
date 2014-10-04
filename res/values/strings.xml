@@ -11,6 +11,10 @@
     <string name="camera_subtitle">See results of your algorithm</string>
     <string name="camera_label">camera</string>
     
+    <string name="felix_title">Felix</string>
+    <string name="felix_subtitle">Felix Sandlåda</string>
+    <string name="felix_label">felix</string>
+    
     <string name="design_title">Create Algorithm</string>
     <string name="design_subtitle">Create your algorithm</string>
     <string name="design_label">design</string>

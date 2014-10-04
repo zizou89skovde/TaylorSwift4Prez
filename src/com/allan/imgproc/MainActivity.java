@@ -8,6 +8,7 @@ import java.util.Map;
 import com.allan.imgproc.R;
 import com.allan.imgproc.camera.CameraActivity;
 import com.allan.imgproc.design.DesignActivity;
+import com.allan.imgproc.felix.FelixActivity;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -49,6 +50,15 @@ public class MainActivity extends ListActivity {
 			activityMapping.put(i++, CameraActivity.class);			
 		}
 
+		{
+			final Map<String, Object> item = new HashMap<String, Object>();
+			item.put(ITEM_IMAGE, R.drawable.felix);
+			item.put(ITEM_TITLE, getText(R.string.felix_title));
+			item.put(ITEM_SUBTITLE, getText(R.string.felix_subtitle));
+			
+			data.add(item);
+			activityMapping.put(i++, FelixActivity.class);			
+		}
 		{
 			final Map<String, Object> item = new HashMap<String, Object>();
 			item.put(ITEM_IMAGE, R.drawable.back);
