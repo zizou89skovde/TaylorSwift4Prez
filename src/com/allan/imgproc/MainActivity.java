@@ -68,6 +68,9 @@ public class MainActivity extends ListActivity {
 			data.add(item);
 			activityMapping.put(i++, DesignActivity.class);			
 		}
+		
+
+	
 
 		final SimpleAdapter dataAdapter = new SimpleAdapter(this, data, R.layout.main_menu_item, new String[] {ITEM_IMAGE, ITEM_TITLE, ITEM_SUBTITLE}, new int[] {R.id.Image, R.id.Title, R.id.SubTitle});
 		setListAdapter(dataAdapter);	

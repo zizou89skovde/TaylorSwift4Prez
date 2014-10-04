@@ -58,6 +58,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2 {
 
 	}
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -32,6 +32,10 @@
          <activity
             android:name=".design.DesignActivity"
             android:label="@string/design_label" />
+         
+         <activity
+            android:name=".felix.FelixActivity"
+            android:label="@string/felix_label" />
     </application>
 
     <supports-screens
