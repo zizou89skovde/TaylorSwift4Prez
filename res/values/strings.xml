@@ -15,6 +15,11 @@
     <string name="felix_subtitle">Felix Sandlåda</string>
     <string name="felix_label">felix</string>
     
+        
+    <string name="oliver_title">Oliver</string>
+    <string name="oliver_subtitle">Oliver Sandlåda</string>
+    <string name="oliver_label">oliver</string>
+    
     <string name="design_title">Create Algorithm</string>
     <string name="design_subtitle">Create your algorithm</string>
     <string name="design_label">design</string>

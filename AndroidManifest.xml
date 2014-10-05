@@ -36,6 +36,10 @@
          <activity
             android:name=".felix.FelixActivity"
             android:label="@string/felix_label" />
+         
+         <activity
+            android:name=".oliver.OliverActivity"
+            android:label="@string/oliver_label" />
     </application>
 
     <supports-screens
