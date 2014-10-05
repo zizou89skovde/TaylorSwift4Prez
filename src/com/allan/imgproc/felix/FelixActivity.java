@@ -14,7 +14,9 @@ import com.allan.imgproc.camera.CameraActivity;
 import com.allan.imgproc.opencv.FindFeatures;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ public class FelixActivity extends CameraActivity{
 		mIntermediateMat = new Mat(height, width, CvType.CV_8UC4);
 		mGray = new Mat(height, width, CvType.CV_8UC1);
 	}
+	
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 		mRgba = inputFrame.rgba();
@@ -44,14 +47,16 @@ public class FelixActivity extends CameraActivity{
 		return mRgba;
 
 	}
-	
+
 	public boolean onTouchEvent(android.view.MotionEvent event) {
 		Toast.makeText(getApplicationContext(),"CAPTURE MOFOCKA", Toast.LENGTH_SHORT).show();
 		Log.d("FELIX","CAPTURE MOFOCKAasdass");
+		dispatchTakePictureIntent();
 		return true; // ifall debuggit testa basts
 	};
 
-	Mat findFeatures(CvCameraViewFrame inputFrame){
+	/*
+	private Mat findFeatures(CvCameraViewFrame inputFrame){
 		
 		Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
 		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
@@ -60,5 +65,24 @@ public class FelixActivity extends CameraActivity{
 		Features2d.drawKeypoints(mGray, keyPoints, mRgba);	
 		return mRgba;
 		
+	}*/
+
+	static final int REQUEST_IMAGE_CAPTURE = 1;
+	
+	private void dispatchTakePictureIntent() {
+	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+	    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+	        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+	    }
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+	    	Bundle extras = data.getExtras();
+	    	mIntermediateMat = (Mat) extras.get("data");
+			Toast.makeText(getApplicationContext(),"CAPTURED BIATCH", Toast.LENGTH_SHORT).show();
+			Log.d("FELIX","CAPTURED BIATCHeeeessss");
+	    }
 	}
 }
