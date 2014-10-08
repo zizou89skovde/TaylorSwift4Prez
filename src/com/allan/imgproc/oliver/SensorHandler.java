@@ -7,18 +7,26 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.widget.Toast;
 
-public class SensorData implements SensorEventListener{
+public class SensorHandler implements SensorEventListener{
 	private SensorManager mSensorManager;
 	private Sensor mSensor;
 	private String mLabel;
 	private float[] mSensorValue;
 	private int mSensorAccuracy;
 	/*
-	 * This function should be called from an activity's 
+	 * SensorHandler Usage: 
+	 * Ex:
+	 * Sensor mSensorHandle = new SensorHandler(this,Sensor.TYPE_ROTATION_VECTOR);
+	 * float[] sensorValue = mSensorHandle.getValue();
+	 * String  sensorInfo  = mSensorHandle.getInfo();
+	 * 
+	 * NOTE!
+	 * This constructor should be called from an activity's 
 	 * "onCreate" routine. A list of demanded sensor types
 	 * are passed as arguement.
+	 * 
 	 */
-	public SensorData(Context context,int sensorType){
+	public SensorHandler(Context context,int sensorType){
 		mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);		
 		mSensor = selectSensor(sensorType);
 		mSensorValue = new float[3];

@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class OliverActivity extends Activity{
-	ArrayList<SensorData> mSensors;
+	ArrayList<SensorHandler> mSensors;
 	int mCurrentIndex = 0;
 	int mSensorTypeList[];
 	public OliverActivity() {
@@ -24,10 +24,10 @@ public class OliverActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sensor_menu);
-		mSensors = new ArrayList<SensorData>();
-		mSensors.add(new SensorData(this,Sensor.TYPE_MAGNETIC_FIELD));
-		mSensors.add(new SensorData(this,Sensor.TYPE_ROTATION_VECTOR));
-		mSensors.add(new SensorData(this,Sensor.TYPE_GRAVITY));
+		mSensors = new ArrayList<SensorHandler>();
+		mSensors.add(new SensorHandler(this,Sensor.TYPE_MAGNETIC_FIELD));
+		mSensors.add(new SensorHandler(this,Sensor.TYPE_ROTATION_VECTOR));
+		mSensors.add(new SensorHandler(this,Sensor.TYPE_GRAVITY));
 		setTexts();
 		setButtons();
 	
@@ -36,7 +36,7 @@ public class OliverActivity extends Activity{
 	@Override
 	protected void onPause() {
 		super.onPause();
-		for (SensorData s: mSensors)
+		for (SensorHandler s: mSensors)
 			s.onResume();
 	}
 	
