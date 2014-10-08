@@ -38,6 +38,11 @@
     <string name="design_button_previous">Previous</string>
     <string name="design_button_check">Check</string>
     
+    <string name="sensor_text_title">Sensor Title</string>
+    <string name="sensor_text_1">Sensor 1</string>
+    <string name="sensor_text_2">Sensor 2</string>
+    <string name="sensor_text_3">Sensor 3</string>
+    
     
 
 </resources>
