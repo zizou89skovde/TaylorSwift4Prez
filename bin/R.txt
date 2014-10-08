@@ -15,15 +15,20 @@ int id DesignTextCurrent 0x7f040008
 int id DesignTextNext 0x7f040009
 int id DesignTextPrev 0x7f040007
 int id Image 0x7f04000d
+int id SensorLayout 0x7f040010
 int id SubTitle 0x7f04000f
 int id Title 0x7f04000e
-int id action_settings 0x7f040010
+int id action_settings 0x7f040015
 int id any 0x7f040000
 int id back 0x7f040001
 int id camera_surface_view 0x7f040003
 int id front 0x7f040002
 int id lblListHeader 0x7f040004
 int id lblListItem 0x7f040005
+int id sensor_text_1 0x7f040012
+int id sensor_text_2 0x7f040013
+int id sensor_text_3 0x7f040014
+int id sensor_text_title 0x7f040011
 int layout camera_menu 0x7f030000
 int layout design_list_group 0x7f030001
 int layout design_list_item 0x7f030002
@@ -31,6 +36,7 @@ int layout design_menu 0x7f030003
 int layout icon_border 0x7f030004
 int layout main_menu 0x7f030005
 int layout main_menu_item 0x7f030006
+int layout sensor_menu 0x7f030007
 int menu main 0x7f080000
 int string action_settings 0x7f060002
 int string app_name 0x7f060000
@@ -61,6 +67,10 @@ int string new_item 0x7f060011
 int string oliver_label 0x7f06000d
 int string oliver_subtitle 0x7f06000c
 int string oliver_title 0x7f06000b
+int string sensor_text_1 0x7f06001e
+int string sensor_text_2 0x7f06001f
+int string sensor_text_3 0x7f060020
+int string sensor_text_title 0x7f06001d
 int style AppBaseTheme 0x7f070000
 int style AppTheme 0x7f070001
 int[] styleable CameraBridgeViewBase { 0x7f010000, 0x7f010001 }

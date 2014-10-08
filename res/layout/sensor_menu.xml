@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/SensorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/sensor_text_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.23"
+        android:text="@string/sensor_text_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#696969" />
+
+    <TextView
+        android:id="@+id/sensor_text_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.31"
+        android:text="@string/sensor_text_1" />
+
+    <TextView
+        android:id="@+id/sensor_text_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.32"
+        android:text="@string/sensor_text_2"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/sensor_text_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.20"
+        android:text="@string/sensor_text_3"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#696969" />
+
+    <Button
+        android:id="@+id/ButtonPrev"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.00"
+        android:text="@string/design_button_previous" />
+
+    <Button
+        android:id="@+id/ButtonNext"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.00"
+        android:text="@string/design_button_next" />
+
+    <Button
+        android:id="@+id/ButtonCheck"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/design_button_check" />
+
+</LinearLayout>

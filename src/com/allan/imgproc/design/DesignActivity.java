@@ -33,7 +33,7 @@ import android.widget.Toast;
 
 
 
-public class DesignActivity extends ExpandableListActivity{
+public class DesignActivity extends ExpandableListActivity {
 	ExpandableListAdapter mListAdapter;
 	ExpandableListView mExpandableListView;
 	List<String> mListHeader;
@@ -240,4 +240,6 @@ public class DesignActivity extends ExpandableListActivity{
 			textCurrent.setText(mAlgoritmList.get(currentIndex).getLabel());
 		}
 	}
+
+
 }

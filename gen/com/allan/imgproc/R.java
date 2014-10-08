@@ -63,15 +63,20 @@ containing a value of this type.
         public static final int DesignTextNext=0x7f040009;
         public static final int DesignTextPrev=0x7f040007;
         public static final int Image=0x7f04000d;
+        public static final int SensorLayout=0x7f040010;
         public static final int SubTitle=0x7f04000f;
         public static final int Title=0x7f04000e;
-        public static final int action_settings=0x7f040010;
+        public static final int action_settings=0x7f040015;
         public static final int any=0x7f040000;
         public static final int back=0x7f040001;
         public static final int camera_surface_view=0x7f040003;
         public static final int front=0x7f040002;
         public static final int lblListHeader=0x7f040004;
         public static final int lblListItem=0x7f040005;
+        public static final int sensor_text_1=0x7f040012;
+        public static final int sensor_text_2=0x7f040013;
+        public static final int sensor_text_3=0x7f040014;
+        public static final int sensor_text_title=0x7f040011;
     }
     public static final class layout {
         public static final int camera_menu=0x7f030000;
@@ -81,6 +86,7 @@ containing a value of this type.
         public static final int icon_border=0x7f030004;
         public static final int main_menu=0x7f030005;
         public static final int main_menu_item=0x7f030006;
+        public static final int sensor_menu=0x7f030007;
     }
     public static final class menu {
         public static final int main=0x7f080000;
@@ -115,6 +121,10 @@ containing a value of this type.
         public static final int oliver_label=0x7f06000d;
         public static final int oliver_subtitle=0x7f06000c;
         public static final int oliver_title=0x7f06000b;
+        public static final int sensor_text_1=0x7f06001e;
+        public static final int sensor_text_2=0x7f06001f;
+        public static final int sensor_text_3=0x7f060020;
+        public static final int sensor_text_title=0x7f06001d;
     }
     public static final class style {
         /** 
