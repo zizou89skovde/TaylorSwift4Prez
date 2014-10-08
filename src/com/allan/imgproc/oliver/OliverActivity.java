@@ -40,6 +40,11 @@ public class OliverActivity extends Activity{
 			s.onResume();
 	}
 	
+	/*
+	 * Set layout texts. 
+	 * Text boxes will contain info about the selected sensors and 
+	 * their current values.
+	 */
 	private void setTexts(){
 		TextView sensor1  	  = (TextView) findViewById(R.id.sensor_text_1);
 		TextView sensor2  	  = (TextView) findViewById(R.id.sensor_text_2);
@@ -85,6 +90,7 @@ public class OliverActivity extends Activity{
 			}
 		});
 		
+		// Knapparna nedan används ej
 		Button buttonPrev  = (Button) findViewById(R.id.ButtonPrev);
 		buttonPrev.setVisibility(Button.INVISIBLE);
 		buttonPrev.setOnClickListener(new OnClickListener() {	

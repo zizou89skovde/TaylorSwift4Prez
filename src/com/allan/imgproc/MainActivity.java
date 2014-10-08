@@ -9,7 +9,7 @@ import com.allan.imgproc.R;
 import com.allan.imgproc.camera.CameraActivity;
 import com.allan.imgproc.design.DesignActivity;
 import com.allan.imgproc.felix.FelixActivity;
-import com.allan.imgproc.oliver.OliverActivity;
+//import com.allan.imgproc.oliver.OliverActivity;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -69,7 +69,7 @@ public class MainActivity extends ListActivity {
 			data.add(item);
 			activityMapping.put(i++, DesignActivity.class);			
 		}
-		{
+		/*{
 			final Map<String, Object> item = new HashMap<String, Object>();
 			item.put(ITEM_IMAGE, R.drawable.allan);
 			item.put(ITEM_TITLE, getText(R.string.oliver_title));
@@ -77,7 +77,7 @@ public class MainActivity extends ListActivity {
 			
 			data.add(item);
 			activityMapping.put(i++, OliverActivity.class);			
-		}
+		}*/
 
 	
 

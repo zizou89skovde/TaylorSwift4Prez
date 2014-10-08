@@ -33,6 +33,9 @@ public class SensorData implements SensorEventListener{
 	
 	public float[] getSensorValue(){
 		if(mSensor.getType() == Sensor.TYPE_ROTATION_VECTOR){
+			/*
+			 * Androids egna sensorfusion för att plocka ut eulervinklar
+			 */
 			 float[] R = new float[9];
 			 SensorManager.getRotationMatrixFromVector(R,mSensorValue);
 			 float[] orientation = new float[3];

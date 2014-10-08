@@ -45,3 +45,7 @@ Temporary Items
 *.apk
 *.properties
 *.properties
+bin/classes.dex
+bin/dexedLibs/opencv library - 2.4.9-20fb805e1d2d3b51580f2b9a7ce00c17.jar
+bin/ImgProc.apk
+bin/resources.ap_
