@@ -6,7 +6,10 @@ import java.util.Vector;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfDMatch;
 import org.opencv.core.MatOfKeyPoint;
+import org.opencv.features2d.DescriptorExtractor;
+import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
 import org.opencv.features2d.Features2d;
 import org.opencv.imgproc.Imgproc;
@@ -31,9 +34,11 @@ public class FelixActivity extends CameraActivity{
 	private int 				   camera_index;
 	private int					   camera_count;
 	private Vector<Double>	       mythreeDPoints;
-	
+	MatOfKeyPoint 				   keyPoints;
+	DescriptorMatcher			   mmatcher;
+	MatOfDMatch 				   mmatches;
 	public FelixActivity() throws IOException {
-		super();		
+		super();	
 	}
 
 	@Override
@@ -42,16 +47,42 @@ public class FelixActivity extends CameraActivity{
 		mRgba = new Mat(height, width, CvType.CV_8UC4);
 		mIntermediateMat = new Mat(height, width, CvType.CV_8UC4);
 		mGray = new Mat(height, width, CvType.CV_8UC1);
+		mmatcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
 	}
 	
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 		mRgba = inputFrame.rgba();
-		Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
-		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
-		MatOfKeyPoint keyPoints = new MatOfKeyPoint();
-		featureDetector.detect(mGray, keyPoints);
-		Features2d.drawKeypoints(mGray, keyPoints, mRgba);	
+		
+		//Feature detection
+		//Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
+		//FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
+		//featureDetector.detect(mGray, keyPoints);
+		//Features2d.drawKeypoints(mGray, keyPoints, mRgba);
+		
+		if(camera_count<20)
+			camera_count++;
+		
+		if(camera_index<20)
+			camera_index++;
+		else
+			camera_index = 0;
+	
+		mycameras[camera_index] = new CameraInstance(mRgba);
+		
+		if(camera_count<2)
+			return mRgba;
+		
+		//Feature matching
+		int last_camera_index;
+		if(camera_index > 0)
+			last_camera_index = camera_index-1;
+		else
+			last_camera_index = 19;
+		
+		mmatcher.match(mycameras[camera_index].descriptor, mycameras[last_camera_index].descriptor, mmatches);
+
+		//Features2d.drawMatches(mGray, mycameras[camera_index].keyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].keyPoints, mmatches, mGray);
 		return mRgba;
 
 	}
@@ -95,24 +126,7 @@ public class FelixActivity extends CameraActivity{
 	}
 	*/
 	
-	public double[] projectionError() {
-		
-		int output_size = 0;
-		for(int i = 0;i<camera_count;i++)
-		{
-			output_size += mycameras[i].points.size();
-		}
-		
-		double[] output_vector = new double[2*output_size];
-		
-		for(int i = 0;i<camera_count;i++)
-		{
-			output_vector[2*i]=1;
-			output_vector[2*i+1]=1;
-		}
-		
-		return output_vector;
-	}
+
 	
 	}
 	
