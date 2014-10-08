@@ -1,15 +1,16 @@
 package com.allan.imgproc.felix;
 
 import java.util.Vector;
+
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-<<<<<<< HEAD
-=======
+
 import org.opencv.core.MatOfKeyPoint;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.FeatureDetector;
 import org.opencv.features2d.Features2d;
 import org.opencv.imgproc.Imgproc;
->>>>>>> origin/master
+
 import com.allan.imgproc.felix.IntrestPoint;
 
 public class CameraInstance {
@@ -36,10 +37,7 @@ public class CameraInstance {
 	
 	public Mat rotationMatrix()
 	{
-<<<<<<< HEAD
-		//Mat X = zeros(3,3);
-		return null;
-=======
+
 		Mat mX = new Mat(3,3,CvType.CV_64FC1);
 		Mat mY = new Mat(3,3,CvType.CV_64FC1);
 		Mat mZ = new Mat(3,3,CvType.CV_64FC1);
@@ -84,6 +82,5 @@ public class CameraInstance {
 		Mat Cres = Rt.mul(C);
 		
 		return Cres;
->>>>>>> origin/master
 	}
 }
