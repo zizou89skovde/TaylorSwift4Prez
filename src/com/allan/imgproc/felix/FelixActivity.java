@@ -1,6 +1,7 @@
 package com.allan.imgproc.felix;
 
 import java.io.IOException;
+import java.util.Vector;
 
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.core.CvType;
@@ -20,10 +21,17 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.allan.imgproc.felix.CameraInstance;
+
 public class FelixActivity extends CameraActivity{
 	private Mat                    mRgba;
 	private Mat                    mIntermediateMat;
 	private Mat                    mGray;
+	private CameraInstance[] 	   mycameras = new CameraInstance[20];
+	private int 				   camera_index;
+	private int					   camera_count;
+	private Vector<Double>	       mythreeDPoints;
+	
 	public FelixActivity() throws IOException {
 		super();		
 	}
@@ -51,7 +59,7 @@ public class FelixActivity extends CameraActivity{
 	public boolean onTouchEvent(android.view.MotionEvent event) {
 		Toast.makeText(getApplicationContext(),"CAPTURE MOFOCKA", Toast.LENGTH_SHORT).show();
 		Log.d("FELIX","CAPTURE MOFOCKAasdass");
-		dispatchTakePictureIntent();
+		//dispatchTakePictureIntent();
 		return true; // ifall debuggit testa basts
 	};
 
@@ -65,7 +73,7 @@ public class FelixActivity extends CameraActivity{
 		Features2d.drawKeypoints(mGray, keyPoints, mRgba);	
 		return mRgba;
 		
-	}*/
+	}
 
 	static final int REQUEST_IMAGE_CAPTURE = 1;
 	
@@ -85,4 +93,26 @@ public class FelixActivity extends CameraActivity{
 			Log.d("FELIX","CAPTURED BIATCHeeeessss");
 	    }
 	}
-}
+	*/
+	
+	public double[] projectionError() {
+		
+		int output_size = 0;
+		for(int i = 0;i<camera_count;i++)
+		{
+			output_size += mycameras[i].points.size();
+		}
+		
+		double[] output_vector = new double[2*output_size];
+		
+		for(int i = 0;i<camera_count;i++)
+		{
+			output_vector[2*i]=1;
+			output_vector[2*i+1]=1;
+		}
+		
+		return output_vector;
+	}
+	
+	}
+	

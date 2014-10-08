@@ -48,10 +48,11 @@ containing a value of this type.
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int back=0x7f020000;
-        public static final int cam=0x7f020001;
-        public static final int felix=0x7f020002;
-        public static final int ic_launcher=0x7f020003;
+        public static final int allan=0x7f020000;
+        public static final int back=0x7f020001;
+        public static final int cam=0x7f020002;
+        public static final int felix=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
     }
     public static final class id {
         public static final int ButtonCheck=0x7f04000c;
@@ -90,27 +91,30 @@ containing a value of this type.
         public static final int camera_label=0x7f060007;
         public static final int camera_subtitle=0x7f060006;
         public static final int camera_title=0x7f060005;
-        public static final int design_button_check=0x7f060019;
-        public static final int design_button_next=0x7f060017;
-        public static final int design_button_previous=0x7f060018;
-        public static final int design_canny_label=0x7f060013;
-        public static final int design_canny_subtitle=0x7f060012;
-        public static final int design_canny_title=0x7f060011;
-        public static final int design_current_item=0x7f06000f;
-        public static final int design_gray_label=0x7f060016;
-        public static final int design_gray_subtitle=0x7f060015;
-        public static final int design_gray_title=0x7f060014;
-        public static final int design_header=0x7f060010;
-        public static final int design_label=0x7f06000d;
-        public static final int design_subtitle=0x7f06000c;
-        public static final int design_title=0x7f06000b;
+        public static final int design_button_check=0x7f06001c;
+        public static final int design_button_next=0x7f06001a;
+        public static final int design_button_previous=0x7f06001b;
+        public static final int design_canny_label=0x7f060016;
+        public static final int design_canny_subtitle=0x7f060015;
+        public static final int design_canny_title=0x7f060014;
+        public static final int design_current_item=0x7f060012;
+        public static final int design_gray_label=0x7f060019;
+        public static final int design_gray_subtitle=0x7f060018;
+        public static final int design_gray_title=0x7f060017;
+        public static final int design_header=0x7f060013;
+        public static final int design_label=0x7f060010;
+        public static final int design_subtitle=0x7f06000f;
+        public static final int design_title=0x7f06000e;
         public static final int felix_label=0x7f06000a;
         public static final int felix_subtitle=0x7f060009;
         public static final int felix_title=0x7f060008;
         public static final int hello_world=0x7f060001;
         public static final int main_header=0x7f060004;
         public static final int main_title=0x7f060003;
-        public static final int new_item=0x7f06000e;
+        public static final int new_item=0x7f060011;
+        public static final int oliver_label=0x7f06000d;
+        public static final int oliver_subtitle=0x7f06000c;
+        public static final int oliver_title=0x7f06000b;
     }
     public static final class style {
         /** 
