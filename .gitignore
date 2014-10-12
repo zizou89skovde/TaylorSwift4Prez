@@ -57,3 +57,6 @@ bin/classes/com/allan/imgproc/oliver/OliverActivity.class
 bin/classes/com/allan/imgproc/R$styleable.class
 bin/classes/com/allan/imgproc/oliver/OliverActivity.class
 bin/classes/com/allan/imgproc/oliver/OliverActivity.class
+*.class
+*.class
+*.class
