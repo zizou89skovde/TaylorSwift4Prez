@@ -28,15 +28,16 @@ import com.allan.imgproc.felix.CameraInstance;
 
 public class FelixActivity extends CameraActivity{
 	private Mat                    mRgba;
-	private Mat                    mIntermediateMat;
 	private Mat                    mGray;
 	private CameraInstance[] 	   mycameras = new CameraInstance[20];
 	private int 				   camera_index;
 	private int					   camera_count;
-	private Vector<Double>	       mythreeDPoints;
-	MatOfKeyPoint 				   keyPoints;
-	DescriptorMatcher			   mmatcher;
-	MatOfDMatch 				   mmatches;
+	private int					   get_camera;
+	private int 				   cam_height;
+	private int					   cam_width;
+	private MatOfKeyPoint 		   keyPoints;
+	private DescriptorMatcher	   mmatcher;
+	private MatOfDMatch 		   mmatches;
 	public FelixActivity() throws IOException {
 		super();	
 	}
@@ -44,10 +45,12 @@ public class FelixActivity extends CameraActivity{
 	@Override
 	public void onCameraViewStarted(int width, int height) {
 		super.onCameraViewStarted(width, height);
+		cam_height = height;
+		cam_width = width;
 		mRgba = new Mat(height, width, CvType.CV_8UC4);
-		mIntermediateMat = new Mat(height, width, CvType.CV_8UC4);
 		mGray = new Mat(height, width, CvType.CV_8UC1);
 		mmatcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
+		mmatches = new MatOfDMatch();
 	}
 	
 	@Override
@@ -59,41 +62,58 @@ public class FelixActivity extends CameraActivity{
 		//FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
 		//featureDetector.detect(mGray, keyPoints);
 		//Features2d.drawKeypoints(mGray, keyPoints, mRgba);
+		  
+		  
+		if(get_camera == 1)
+		{
+			get_camera = 0;
+			
+			computeMatches();
+
+			//Features2d.drawMatches(mGray, mycameras[camera_index].keyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].keyPoints, mmatches, mGray);
+		}
 		
+		return mRgba;
+
+	}
+	
+
+	public boolean onTouchEvent(android.view.MotionEvent event) {
+		Toast.makeText(getApplicationContext(),"CAPTURE MOFOCKA", Toast.LENGTH_SHORT).show();
+		Log.d("FELIX","CAPTURE MOFOCKAasdass");
+		get_camera = 1;
+		//dispatchTakePictureIntent();
+		return true; // ifall debuggit testa basts
+	};
+
+	
+	public void computeMatches()
+	{
 		if(camera_count<20)
 			camera_count++;
 		
-		if(camera_index<20)
+		if(camera_index<19)
 			camera_index++;
 		else
 			camera_index = 0;
 	
-		mycameras[camera_index] = new CameraInstance(mRgba);
-		
-		if(camera_count<2)
-			return mRgba;
+		//Toast.makeText(getApplicationContext(),"balle", Toast.LENGTH_SHORT).show();
+		//Log.d("FELIX","asdg");
+		mycameras[camera_index] = new CameraInstance(mRgba,cam_height,cam_width);
+		mycameras[camera_index].ExtractDescriptors();
+		//if(camera_count<2)
+		//	return mRgba;
 		
 		//Feature matching
 		int last_camera_index;
 		if(camera_index > 0)
 			last_camera_index = camera_index-1;
 		else
-			last_camera_index = 19;
+			last_camera_index = 19;	
 		
-		mmatcher.match(mycameras[camera_index].descriptor, mycameras[last_camera_index].descriptor, mmatches);
-
-		//Features2d.drawMatches(mGray, mycameras[camera_index].keyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].keyPoints, mmatches, mGray);
-		return mRgba;
-
+		//mmatcher.match(mycameras[camera_index].mdescriptor, mycameras[last_camera_index].mdescriptor, mmatches);
+		
 	}
-
-	public boolean onTouchEvent(android.view.MotionEvent event) {
-		Toast.makeText(getApplicationContext(),"CAPTURE MOFOCKA", Toast.LENGTH_SHORT).show();
-		Log.d("FELIX","CAPTURE MOFOCKAasdass");
-		//dispatchTakePictureIntent();
-		return true; // ifall debuggit testa basts
-	};
-
 	/*
 	private Mat findFeatures(CvCameraViewFrame inputFrame){
 		
