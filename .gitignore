@@ -26,8 +26,7 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must end with two \r
-Icon
-
+Icon
 
 # Thumbnails
 ._*
@@ -54,8 +53,17 @@ bin/resources.ap_
 bin/resources.ap_
 *.apk
 *.dex
-bin/classes/com/allan/imgproc/oliver/OliverActivity.class
-bin/classes/com/allan/imgproc/R$styleable.class
-bin/classes/com/allan/imgproc/oliver/OliverActivity.class
-bin/classes/com/allan/imgproc/oliver/OliverActivity.class
-*.dex
+bin/ImgProc.apk
+bin/ImgProc.apk
+bin/R.txt
+bin/res/bc/raw/filter.bc
+bin/rsDeps/filter.d
+bin/resources.ap_
+bin/R.txt
+bin/R.txt
+bin/R.txt
+bin/resources.ap_
+bin/rsDeps/process.d
+bin/*.*
+bin/classes/com/allan/imgproc/felix/FelixActivity.class
+src/com/allan/imgproc/felix/FelixActivity.java
