@@ -16,7 +16,7 @@
 
 /*
  * This file is auto-generated. DO NOT MODIFY!
- * The source Renderscript file: C:\\Users\\Datorn\\Desktop\\AndroidProjekt\\ImgProc\\TaylorSwift4Prez\\src\\process.rs
+ * The source Renderscript file: C:\\Users\\F\\Documents\\GitHub\\TaylorSwift4Prez\\src\\process.rs
  */
 package com.allan.imgproc.oliver;
 
