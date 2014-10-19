@@ -30,19 +30,33 @@ public class CameraInstance {
 	}
 	//Camera translation
 
-	public void ExtractDescriptors()
+	public boolean ExtractDescriptors()
 	{
 		MatOfKeyPoint keyPoints = new MatOfKeyPoint();
 			
 		Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
-	  	FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.ORB);
+	  	FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
 	  	
 	  	featureDetector.detect(mGray, keyPoints);
 	  	mkeyPoints = keyPoints;
-	  	//Features2d.drawKeypoints(mGray, keyPoints, mRgba);	
+	  	if(mkeyPoints.empty())
+	  		return false;
+	  	Features2d.drawKeypoints(mGray, keyPoints, mRgba);	
 		DescriptorExtractor ext = DescriptorExtractor.create(DescriptorExtractor.BRIEF);
+		
 		ext.compute(mRgba,keyPoints,mdescriptors);
 		
+		return true;
+	}
+	
+	public void freememory()
+	{
+		mRgba.release();
+		mdescriptors.release();
+		mGray.release();
+		mRgba = null;
+		mdescriptors = null;
+		mGray = null;
 	}
 	
 	public Mat rotationMatrix()
