@@ -14,26 +14,36 @@ import org.opencv.imgproc.Imgproc;
 import com.allan.imgproc.felix.IntrestPoint;
 
 public class CameraInstance {
-	
-	public CameraInstance(Mat in_mRgba)
-	{
-		mRgba = in_mRgba;
-		Mat mGray = new Mat();
-		Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
-		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
-		featureDetector.detect(mGray, keyPoints);
-		Features2d.drawKeypoints(mGray, keyPoints, mRgba);
-
-		DescriptorExtractor ext = DescriptorExtractor.create(DescriptorExtractor.SIFT);
-		ext.compute(mRgba,keyPoints,descriptor);
-	}
-	//Camera translation
 	public double[] t = new double[3]; 
 	//Camera Rotation
 	public double alpha,beta,gamma;
 	
-	MatOfKeyPoint keyPoints;
-	Mat mRgba, descriptor;
+	MatOfKeyPoint mkeyPoints;
+	Mat mRgba, mdescriptors, mGray;
+	
+	public CameraInstance(Mat in_mRgba,int width, int height)
+	{
+		mRgba = new Mat(height, width, CvType.CV_8UC4);
+		mGray = new Mat(height, width, CvType.CV_8UC1);
+		mRgba = in_mRgba;
+		mdescriptors = new Mat();
+	}
+	//Camera translation
+
+	public void ExtractDescriptors()
+	{
+		MatOfKeyPoint keyPoints = new MatOfKeyPoint();
+			
+		Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
+	  	FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.ORB);
+	  	
+	  	featureDetector.detect(mGray, keyPoints);
+	  	mkeyPoints = keyPoints;
+	  	Features2d.drawKeypoints(mGray, keyPoints, mRgba);	
+		DescriptorExtractor ext = DescriptorExtractor.create(DescriptorExtractor.BRIEF);
+		ext.compute(mRgba,keyPoints,mdescriptors);
+		
+	}
 	
 	public Mat rotationMatrix()
 	{

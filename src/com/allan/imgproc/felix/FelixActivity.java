@@ -28,15 +28,17 @@ import com.allan.imgproc.felix.CameraInstance;
 
 public class FelixActivity extends CameraActivity{
 	private Mat                    mRgba;
-	private Mat                    mIntermediateMat;
 	private Mat                    mGray;
 	private CameraInstance[] 	   mycameras = new CameraInstance[20];
 	private int 				   camera_index;
 	private int					   camera_count;
-	private Vector<Double>	       mythreeDPoints;
-	MatOfKeyPoint 				   keyPoints;
-	DescriptorMatcher			   mmatcher;
-	MatOfDMatch 				   mmatches;
+	private int					   get_camera;
+	private int 				   cam_height;
+	private int					   cam_width;
+	private MatOfKeyPoint 		   keyPoints;
+	private DescriptorMatcher	   mmatcher;
+	private MatOfDMatch 		   mmatches;
+	private Mat 			       corre;
 	public FelixActivity() throws IOException {
 		super();	
 	}
@@ -44,32 +46,31 @@ public class FelixActivity extends CameraActivity{
 	@Override
 	public void onCameraViewStarted(int width, int height) {
 		super.onCameraViewStarted(width, height);
+		cam_height = height;
+		cam_width = width;
 		mRgba = new Mat(height, width, CvType.CV_8UC4);
-		mIntermediateMat = new Mat(height, width, CvType.CV_8UC4);
 		mGray = new Mat(height, width, CvType.CV_8UC1);
-		mmatcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
+		mmatcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE_HAMMING);
+		mmatches = new MatOfDMatch();
+		corre = new Mat(2*height, 2*width, CvType.CV_8UC4);
 	}
 	
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 		mRgba = inputFrame.rgba();
 		
-		//Feature detection
-		//Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
-		//FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
-		//featureDetector.detect(mGray, keyPoints);
-		//Features2d.drawKeypoints(mGray, keyPoints, mRgba);
-		
 		if(camera_count<20)
 			camera_count++;
 		
-		if(camera_index<20)
+		if(camera_index<19)
 			camera_index++;
 		else
 			camera_index = 0;
 	
-		mycameras[camera_index] = new CameraInstance(mRgba);
-		
+		//Toast.makeText(getApplicationContext(),"balle", Toast.LENGTH_SHORT).show();
+		//Log.d("FELIX","asdg");
+		mycameras[camera_index] = new CameraInstance(mRgba,cam_height,cam_width);
+		mycameras[camera_index].ExtractDescriptors();
 		if(camera_count<2)
 			return mRgba;
 		
@@ -78,22 +79,56 @@ public class FelixActivity extends CameraActivity{
 		if(camera_index > 0)
 			last_camera_index = camera_index-1;
 		else
-			last_camera_index = 19;
+			last_camera_index = 19;	
 		
-		mmatcher.match(mycameras[camera_index].descriptor, mycameras[last_camera_index].descriptor, mmatches);
-
-		//Features2d.drawMatches(mGray, mycameras[camera_index].keyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].keyPoints, mmatches, mGray);
-		return mRgba;
-
+		mmatcher.match(mycameras[camera_index].mdescriptors, mycameras[last_camera_index].mdescriptors, mmatches);
+		
+		Features2d.drawMatches(mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints, mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mmatches, corre);
+		return corre;
+		
 	}
+	
 
 	public boolean onTouchEvent(android.view.MotionEvent event) {
 		Toast.makeText(getApplicationContext(),"CAPTURE MOFOCKA", Toast.LENGTH_SHORT).show();
 		Log.d("FELIX","CAPTURE MOFOCKAasdass");
+		get_camera = 1;
 		//dispatchTakePictureIntent();
 		return true; // ifall debuggit testa basts
 	};
 
+	
+	public void computeMatches()
+	{
+		if(camera_count<20)
+			camera_count++;
+		
+		if(camera_index<19)
+			camera_index++;
+		else
+			camera_index = 0;
+	
+		//Toast.makeText(getApplicationContext(),"balle", Toast.LENGTH_SHORT).show();
+		//Log.d("FELIX","asdg");
+		mycameras[camera_index] = new CameraInstance(mRgba,cam_height,cam_width);
+		mycameras[camera_index].ExtractDescriptors();
+		if(camera_count<2)
+			return;
+		
+		//Feature matching
+		int last_camera_index;
+		if(camera_index > 0)
+			last_camera_index = camera_index-1;
+		else
+			last_camera_index = 19;	
+		
+		mmatcher.match(mycameras[camera_index].mdescriptors, mycameras[last_camera_index].mdescriptors, mmatches);
+		
+		
+		
+		//Features2d.drawMatches(mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints, mmatches, mycameras[camera_index].mGray);
+		Features2d.drawMatches(mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints, mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mmatches, corre);
+	} 
 	/*
 	private Mat findFeatures(CvCameraViewFrame inputFrame){
 		
