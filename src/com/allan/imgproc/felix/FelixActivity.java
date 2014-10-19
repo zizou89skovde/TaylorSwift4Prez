@@ -53,15 +53,14 @@ public class FelixActivity extends CameraActivity{
 		mGray = new Mat(height, width, CvType.CV_8UC1);
 		mmatcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE_HAMMING);
 		mmatches = new MatOfDMatch();
-		corre = new Mat(height, 2*width, CvType.CV_8UC4);
+		corre = new Mat(2*height, width, CvType.CV_8UC4);
 	}
-	boolean calculationCompleted =false;
-	int counter = 0;
-	
+
+	int counter = 0;	
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-		counter++;
-		if(!calculationCompleted && counter % 3 == 0){
+		counter++;	
+		if( counter % 1 == 0){
 			counter = 1;
 			mRgba = inputFrame.rgba();
 
@@ -72,13 +71,20 @@ public class FelixActivity extends CameraActivity{
 				camera_index++;
 			else
 				camera_index = 0;
-			
-			
-			Log.d("FELIX","Camera Count: " +camera_count);
-			//Toast.makeText(getApplicationContext(),"balle", Toast.LENGTH_SHORT).show();
-			//Log.d("FELIX","asdg");
-			mycameras[camera_index] = new CameraInstance(mRgba,cam_height,cam_width);
+
+			Log.d("FELIX","Computing Matches...");
+
+			long startTime = System.currentTimeMillis();
+			mycameras[camera_index] = new CameraInstance(mRgba.clone(),cam_height,cam_width);
 			mycameras[camera_index].ExtractDescriptors();
+
+			if( mycameras[camera_index].mdescriptors.empty()){
+				camera_index--;
+				camera_count--;
+				return mRgba;
+			}
+
+
 			if(camera_count<2)
 				return mRgba;
 
@@ -89,13 +95,42 @@ public class FelixActivity extends CameraActivity{
 			else
 				last_camera_index = 19;	
 
-			mmatcher.match(mycameras[camera_index].mdescriptors, mycameras[last_camera_index].mdescriptors, mmatches);
+			if(mycameras[last_camera_index].mkeyPoints.empty() || mycameras[camera_index].mkeyPoints.empty()){
+				camera_index--;
+				camera_count--;
+				return mRgba;
+			}
 
-			Features2d.drawMatches(mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints, mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mmatches, corre);
+			mmatcher.match(mycameras[camera_index].mdescriptors, mycameras[last_camera_index].mdescriptors, mmatches);
+			if(mmatches.empty()){
+				camera_index--;
+				camera_count--;
+				return mRgba;
+			}
+			int cols = mycameras[camera_index].mkeyPoints.cols();
+			int rows = mycameras[camera_index].mkeyPoints.rows();
+			Log.d("FELIX","Cols: " + cols);
+			Log.d("FELIX","Rows: " + rows);
+			
+			int colsPrev = mycameras[last_camera_index].mkeyPoints.cols();
+			int rowsPrev = mycameras[last_camera_index].mkeyPoints.rows();
+			Log.d("FELIX","Previous Cols: " + colsPrev);
+			Log.d("FELIX","Previous Rows: " + rowsPrev);
+			
+			
+			 if( Math.abs(cols - colsPrev) > 200 || Math.abs(rows - rowsPrev) > 200){
+					camera_index--;
+					camera_count--;
+					return mRgba;
+			 }
+			Features2d.drawMatches( mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints,mmatches, corre);
 			//Oliver
 			Size size = mRgba.size();
 			Imgproc.resize(corre, mRgba, size);
-//			calculationCompleted = true;
+
+			long stopTime = System.currentTimeMillis();
+			long deltaTime = stopTime -startTime;
+			Log.d("FELIX","Computiation time: " + deltaTime);
 			return mRgba;
 		}
 		return mRgba;

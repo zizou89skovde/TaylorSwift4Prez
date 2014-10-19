@@ -14,6 +14,12 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
+
+*.apk
+*.properties
+*.dex
+*.class
+
 # =========================
 # Operating System Files
 # =========================
@@ -43,13 +49,12 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-*.apk
-*.properties
-*.dex
 
-bin\
-bin\classes
-bin/*
-bin/ImgProc.apk
-bin/classes/allan/imgproc/felix/*
-bin/classes/com/allan/imgproc/felix/FelixActivity.class
+*.dex
+*.class
+*.class
+*.apk
+*.bc
+*.d
+*.apk
+*.class
