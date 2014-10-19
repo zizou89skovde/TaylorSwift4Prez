@@ -38,6 +38,7 @@ public class FelixActivity extends CameraActivity{
 	private MatOfKeyPoint 		   keyPoints;
 	private DescriptorMatcher	   mmatcher;
 	private MatOfDMatch 		   mmatches;
+	private Mat 			       corre;
 	public FelixActivity() throws IOException {
 		super();	
 	}
@@ -49,32 +50,42 @@ public class FelixActivity extends CameraActivity{
 		cam_width = width;
 		mRgba = new Mat(height, width, CvType.CV_8UC4);
 		mGray = new Mat(height, width, CvType.CV_8UC1);
-		mmatcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
+		mmatcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE_HAMMING);
 		mmatches = new MatOfDMatch();
+		corre = new Mat(2*height, 2*width, CvType.CV_8UC4);
 	}
 	
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 		mRgba = inputFrame.rgba();
 		
-		//Feature detection
-		//Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
-		//FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
-		//featureDetector.detect(mGray, keyPoints);
-		//Features2d.drawKeypoints(mGray, keyPoints, mRgba);
-		  
-		  
-		if(get_camera == 1)
-		{
-			get_camera = 0;
-			
-			computeMatches();
-
-			//Features2d.drawMatches(mGray, mycameras[camera_index].keyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].keyPoints, mmatches, mGray);
-		}
+		if(camera_count<20)
+			camera_count++;
 		
-		return mRgba;
-
+		if(camera_index<19)
+			camera_index++;
+		else
+			camera_index = 0;
+	
+		//Toast.makeText(getApplicationContext(),"balle", Toast.LENGTH_SHORT).show();
+		//Log.d("FELIX","asdg");
+		mycameras[camera_index] = new CameraInstance(mRgba,cam_height,cam_width);
+		mycameras[camera_index].ExtractDescriptors();
+		if(camera_count<2)
+			return mRgba;
+		
+		//Feature matching
+		int last_camera_index;
+		if(camera_index > 0)
+			last_camera_index = camera_index-1;
+		else
+			last_camera_index = 19;	
+		
+		mmatcher.match(mycameras[camera_index].mdescriptors, mycameras[last_camera_index].mdescriptors, mmatches);
+		
+		Features2d.drawMatches(mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints, mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mmatches, corre);
+		return corre;
+		
 	}
 	
 
@@ -101,8 +112,8 @@ public class FelixActivity extends CameraActivity{
 		//Log.d("FELIX","asdg");
 		mycameras[camera_index] = new CameraInstance(mRgba,cam_height,cam_width);
 		mycameras[camera_index].ExtractDescriptors();
-		//if(camera_count<2)
-		//	return mRgba;
+		if(camera_count<2)
+			return;
 		
 		//Feature matching
 		int last_camera_index;
@@ -111,9 +122,13 @@ public class FelixActivity extends CameraActivity{
 		else
 			last_camera_index = 19;	
 		
-		//mmatcher.match(mycameras[camera_index].mdescriptor, mycameras[last_camera_index].mdescriptor, mmatches);
+		mmatcher.match(mycameras[camera_index].mdescriptors, mycameras[last_camera_index].mdescriptors, mmatches);
 		
-	}
+		
+		
+		//Features2d.drawMatches(mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints, mmatches, mycameras[camera_index].mGray);
+		Features2d.drawMatches(mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints, mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mmatches, corre);
+	} 
 	/*
 	private Mat findFeatures(CvCameraViewFrame inputFrame){
 		

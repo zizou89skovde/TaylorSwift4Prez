@@ -19,30 +19,29 @@ public class CameraInstance {
 	public double alpha,beta,gamma;
 	
 	MatOfKeyPoint mkeyPoints;
-	Mat mRgba, mdescriptor, mGray;
+	Mat mRgba, mdescriptors, mGray;
 	
 	public CameraInstance(Mat in_mRgba,int width, int height)
 	{
 		mRgba = new Mat(height, width, CvType.CV_8UC4);
 		mGray = new Mat(height, width, CvType.CV_8UC1);
 		mRgba = in_mRgba;
-		//mdescriptor = desc;
+		mdescriptors = new Mat();
 	}
 	//Camera translation
 
 	public void ExtractDescriptors()
 	{
 		MatOfKeyPoint keyPoints = new MatOfKeyPoint();
-		mdescriptor = new Mat();
 			
 		Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
-	  	FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
+	  	FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.ORB);
 	  	
 	  	featureDetector.detect(mGray, keyPoints);
 	  	mkeyPoints = keyPoints;
 	  	Features2d.drawKeypoints(mGray, keyPoints, mRgba);	
 		DescriptorExtractor ext = DescriptorExtractor.create(DescriptorExtractor.BRIEF);
-		ext.compute(mRgba,keyPoints,mdescriptor);
+		ext.compute(mRgba,keyPoints,mdescriptors);
 		
 	}
 	
