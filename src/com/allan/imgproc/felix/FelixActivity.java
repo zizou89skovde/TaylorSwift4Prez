@@ -8,6 +8,7 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDMatch;
 import org.opencv.core.MatOfKeyPoint;
+import org.opencv.core.Size;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
@@ -52,47 +53,95 @@ public class FelixActivity extends CameraActivity{
 		mGray = new Mat(height, width, CvType.CV_8UC1);
 		mmatcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE_HAMMING);
 		mmatches = new MatOfDMatch();
-		corre = new Mat(2*height, 2*width, CvType.CV_8UC4);
+		corre = new Mat(2*height, width, CvType.CV_8UC4);
 	}
+	
+
+	int counter = 0;	
 	
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-		mRgba = inputFrame.rgba();
-		
-		if(camera_count<20)
-			camera_count++;
-		
-		if(camera_index<19)
-			camera_index++;
-		else
-			camera_index = 0;
-	
-		//Toast.makeText(getApplicationContext(),"balle", Toast.LENGTH_SHORT).show();
-		//Log.d("FELIX","asdg");
-		mycameras[camera_index] = new CameraInstance(mRgba,cam_height,cam_width);
-		mycameras[camera_index].ExtractDescriptors();
-		if(camera_count<2)
-			return mRgba;
-		
-		//Feature matching
-		int last_camera_index;
-		if(camera_index > 0)
-			last_camera_index = camera_index-1;
-		else
-			last_camera_index = 19;	
-		
-		if(camera_count>2)
-		{
+		counter++;	
+		if( counter % 1 == 0){
+			counter = 1;
+			mRgba = inputFrame.rgba();
+
+			if(camera_count<20)
+				camera_count++;
+
+			if(camera_index<19)
+				camera_index++;
+			else
+				camera_index = 0;
+
+			Log.d("FELIX","Computing Matches...");
+
+			long startTime = System.currentTimeMillis();
+			mycameras[camera_index] = new CameraInstance(mRgba.clone(),cam_height,cam_width);
+			mycameras[camera_index].ExtractDescriptors();
+
+			if( mycameras[camera_index].mdescriptors.empty()){
+				camera_index--;
+				camera_count--;
+				return mRgba;
+			}
+
+
+			if(camera_count<2)
+				return mRgba;
+
+			//Feature matching
+			int last_camera_index;
+			if(camera_index > 0)
+				last_camera_index = camera_index-1;
+			else
+				last_camera_index = 19;	
+
+			if(mycameras[last_camera_index].mkeyPoints.empty() || mycameras[camera_index].mkeyPoints.empty()){
+				camera_index--;
+				camera_count--;
+				return mRgba;
+			}
+
 			mmatcher.match(mycameras[camera_index].mdescriptors, mycameras[last_camera_index].mdescriptors, mmatches);
-			Mat fittMat = mGray.clone();
-			Features2d.drawMatches(mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints, mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mmatches, fittMat);
-			Imgproc.cvtColor(mGray, mRgba, Imgproc.COLOR_GRAY2RGBA, 4);
-			Imgproc.resize(fittMat, mRgba, mRgba.size(), 0,0, Imgproc.INTER_LINEAR);
-			mRbaold = mRgba;
-			return mRbaold;
+			if(mmatches.empty()){
+				camera_index--;
+				camera_count--;
+				return mRgba;
+			}
+			int cols = mycameras[camera_index].mkeyPoints.cols();
+			int rows = mycameras[camera_index].mkeyPoints.rows();
+			Log.d("FELIX","Cols: " + cols);
+			Log.d("FELIX","Rows: " + rows);
+			
+			int colsPrev = mycameras[last_camera_index].mkeyPoints.cols();
+			int rowsPrev = mycameras[last_camera_index].mkeyPoints.rows();
+			Log.d("FELIX","Previous Cols: " + colsPrev);
+			Log.d("FELIX","Previous Rows: " + rowsPrev);
+			
+			
+			 if( Math.abs(cols - colsPrev) > 200 || Math.abs(rows - rowsPrev) > 200){
+					camera_index--;
+					camera_count--;
+					return mRgba;
+			 }
+			Features2d.drawMatches(mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints,mmatches, corre);
+			
+			mycameras[last_camera_index].freememory();
+			
+			System.gc();
+			//mycameras[last_camera_index];
+			//Oliver
+			Size size = mRgba.size();
+			Imgproc.resize(corre, mRgba, size);
+
+			long stopTime = System.currentTimeMillis();
+			long deltaTime = stopTime -startTime;
+			Log.d("FELIX","Computiation time: " + deltaTime);
+			
 		}
-		return mRbaold;
 		
+			return mRgba;
 	}
 	
 
