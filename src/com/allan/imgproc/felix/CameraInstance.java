@@ -39,7 +39,7 @@ public class CameraInstance {
 	  	
 	  	featureDetector.detect(mGray, keyPoints);
 	  	mkeyPoints = keyPoints;
-	  	Features2d.drawKeypoints(mGray, keyPoints, mRgba);	
+	  	//Features2d.drawKeypoints(mGray, keyPoints, mRgba);	
 		DescriptorExtractor ext = DescriptorExtractor.create(DescriptorExtractor.BRIEF);
 		ext.compute(mRgba,keyPoints,mdescriptors);
 		

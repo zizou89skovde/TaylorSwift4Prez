@@ -27,7 +27,7 @@ import android.widget.Toast;
 import com.allan.imgproc.felix.CameraInstance;
 
 public class FelixActivity extends CameraActivity{
-	private Mat                    mRgba;
+	private Mat                    mRgba,mRbaold;
 	private Mat                    mGray;
 	private CameraInstance[] 	   mycameras = new CameraInstance[20];
 	private int 				   camera_index;
@@ -81,10 +81,17 @@ public class FelixActivity extends CameraActivity{
 		else
 			last_camera_index = 19;	
 		
-		mmatcher.match(mycameras[camera_index].mdescriptors, mycameras[last_camera_index].mdescriptors, mmatches);
-		
-		Features2d.drawMatches(mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints, mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mmatches, corre);
-		return corre;
+		if(camera_count>2)
+		{
+			mmatcher.match(mycameras[camera_index].mdescriptors, mycameras[last_camera_index].mdescriptors, mmatches);
+			Mat fittMat = mGray.clone();
+			Features2d.drawMatches(mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints, mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mmatches, fittMat);
+			Imgproc.cvtColor(mGray, mRgba, Imgproc.COLOR_GRAY2RGBA, 4);
+			Imgproc.resize(fittMat, mRgba, mRgba.size(), 0,0, Imgproc.INTER_LINEAR);
+			mRbaold = mRgba;
+			return mRbaold;
+		}
+		return mRbaold;
 		
 	}
 	

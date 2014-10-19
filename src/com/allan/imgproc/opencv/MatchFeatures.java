@@ -41,7 +41,7 @@ public class MatchFeatures extends ImageProcessObject{
 			Features2d.drawMatches(Gray, keyPoints, mPrevImage, mPrevKeyPoints, matchingKeyPoints, fittMat);		
 			mPrevKeyPoints = keyPoints;
 			mPrevImage 	   = IntermediateMat.clone();
-			 Imgproc.cvtColor(Gray, Rgba, Imgproc.COLOR_GRAY2RGBA, 4);
+			Imgproc.cvtColor(Gray, Rgba, Imgproc.COLOR_GRAY2RGBA, 4);
 			Imgproc.resize(fittMat, Rgba, Rgba.size(), 0,0, Imgproc.INTER_LINEAR);
 		
 		}
