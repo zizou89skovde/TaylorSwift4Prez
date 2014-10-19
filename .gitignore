@@ -67,3 +67,9 @@ bin/rsDeps/process.d
 bin/*.*
 bin/classes/com/allan/imgproc/felix/FelixActivity.class
 src/com/allan/imgproc/felix/FelixActivity.java
+bin/classes.dex
+bin/ImgProc.apk
+bin/classes/com/allan/imgproc/felix/FelixActivity.class
+bin/classes.dex
+bin/ImgProc.apk
+bin/ImgProc.apk
