@@ -47,4 +47,9 @@ Temporary Items
 *.properties
 *.dex
 
-bin/
+bin\
+bin\classes
+bin/*
+bin/ImgProc.apk
+bin/classes/allan/imgproc/felix/*
+bin/classes/com/allan/imgproc/felix/FelixActivity.class

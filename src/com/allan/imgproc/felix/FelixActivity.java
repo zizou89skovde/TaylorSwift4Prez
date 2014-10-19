@@ -57,10 +57,12 @@ public class FelixActivity extends CameraActivity{
 	}
 	boolean calculationCompleted =false;
 	int counter = 0;
+	
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 		counter++;
 		if(!calculationCompleted && counter % 3 == 0){
+			counter = 1;
 			mRgba = inputFrame.rgba();
 
 			if(camera_count<20)
@@ -70,7 +72,9 @@ public class FelixActivity extends CameraActivity{
 				camera_index++;
 			else
 				camera_index = 0;
-
+			
+			
+			Log.d("FELIX","Camera Count: " +camera_count);
 			//Toast.makeText(getApplicationContext(),"balle", Toast.LENGTH_SHORT).show();
 			//Log.d("FELIX","asdg");
 			mycameras[camera_index] = new CameraInstance(mRgba,cam_height,cam_width);
@@ -91,7 +95,7 @@ public class FelixActivity extends CameraActivity{
 			//Oliver
 			Size size = mRgba.size();
 			Imgproc.resize(corre, mRgba, size);
-			calculationCompleted = true;
+//			calculationCompleted = true;
 			return mRgba;
 		}
 		return mRgba;
