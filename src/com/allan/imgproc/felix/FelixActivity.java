@@ -60,7 +60,7 @@ public class FelixActivity extends CameraActivity{
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 		counter++;	
-		if( counter % 1 == 0){
+		if( counter % 2 == 0){
 			counter = 1;
 			mRgba = inputFrame.rgba();
 
@@ -124,6 +124,13 @@ public class FelixActivity extends CameraActivity{
 					return mRgba;
 			 }
 			Features2d.drawMatches( mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints,mmatches, corre);
+
+			//Recycle images
+			mycameras[last_camera_index].mRgba.release();
+			mycameras[last_camera_index].mGray.release();
+			mycameras[last_camera_index].mRgba = null;
+			mycameras[last_camera_index].mGray = null;
+			
 			//Oliver
 			Size size = mRgba.size();
 			Imgproc.resize(corre, mRgba, size);
@@ -131,6 +138,7 @@ public class FelixActivity extends CameraActivity{
 			long stopTime = System.currentTimeMillis();
 			long deltaTime = stopTime -startTime;
 			Log.d("FELIX","Computiation time: " + deltaTime);
+			 System.gc();
 			return mRgba;
 		}
 		return mRgba;
