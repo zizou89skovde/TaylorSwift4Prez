@@ -33,15 +33,15 @@ public class MatchFeatures extends ImageProcessObject{
 		featureDetector.detect(Gray, keyPoints);
 		if(firstRun){
 			mPrevKeyPoints = keyPoints;
-			mPrevImage 	   =  Rgba.clone();
+			mPrevImage 	   = Gray.clone();
 			firstRun = false;
 		}else{
 			MatOfDMatch matchingKeyPoints = new MatOfDMatch();
 			Mat fittMat = Gray.clone();
-			Features2d.drawMatches(Rgba, keyPoints, mPrevImage, mPrevKeyPoints, matchingKeyPoints, fittMat);		
+			Features2d.drawMatches(Gray, keyPoints, mPrevImage, mPrevKeyPoints, matchingKeyPoints, fittMat);		
 			mPrevKeyPoints = keyPoints;
-			mPrevImage 	   = Rgba.clone();
-			 Imgproc.cvtColor(Gray, Rgba, Imgproc.COLOR_GRAY2RGBA, 4);
+			mPrevImage 	   = IntermediateMat.clone();
+			Imgproc.cvtColor(Gray, Rgba, Imgproc.COLOR_GRAY2RGBA, 4);
 			Imgproc.resize(fittMat, Rgba, Rgba.size(), 0,0, Imgproc.INTER_LINEAR);
 		
 		}
