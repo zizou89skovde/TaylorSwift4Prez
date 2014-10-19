@@ -26,7 +26,8 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -44,24 +45,6 @@ Temporary Items
 
 *.apk
 *.properties
-*.properties
-bin/classes.dex
-bin/dexedLibs/opencv library - 2.4.9-20fb805e1d2d3b51580f2b9a7ce00c17.jar
-bin/ImgProc.apk
-bin/resources.ap_
-bin/resources.ap_
-bin/resources.ap_
-*.apk
 *.dex
-bin/ImgProc.apk
-bin/ImgProc.apk
-bin/R.txt
-bin/res/bc/raw/filter.bc
-bin/rsDeps/filter.d
-bin/resources.ap_
-bin/R.txt
-bin/R.txt
-bin/R.txt
-bin/resources.ap_
-bin/rsDeps/process.d
-bin/*.*
+
+bin/
