@@ -100,6 +100,7 @@ public class FelixActivity extends CameraActivity{
 			if(mycameras[last_camera_index].mkeyPoints.empty() || mycameras[camera_index].mkeyPoints.empty()){
 				camera_index--;
 				camera_count--;
+				Log.d("FELIX","keypoints empty");
 				return mRgba;
 			}
 
@@ -107,6 +108,7 @@ public class FelixActivity extends CameraActivity{
 			if(mmatches.empty()){
 				camera_index--;
 				camera_count--;
+				Log.d("FELIX","matches empty");
 				return mRgba;
 			}
 			int cols = mycameras[camera_index].mkeyPoints.cols();
@@ -123,6 +125,7 @@ public class FelixActivity extends CameraActivity{
 			 if( Math.abs(cols - colsPrev) > 200 || Math.abs(rows - rowsPrev) > 200){
 					camera_index--;
 					camera_count--;
+					Log.d("FELIX","abssar");
 					return mRgba;
 			 }
 			Features2d.drawMatches(mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints,mmatches, corre);
