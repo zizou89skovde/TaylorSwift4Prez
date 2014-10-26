@@ -43,7 +43,6 @@ int layout sensor_menu 0x7f030008
 int menu main 0x7f090000
 int raw filter 0x7f040000
 int raw process 0x7f040001
-int raw test_rs 0x7f040002
 int string action_settings 0x7f070002
 int string app_name 0x7f070000
 int string camera_label 0x7f070007

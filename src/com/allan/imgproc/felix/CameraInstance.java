@@ -9,7 +9,10 @@ import org.opencv.core.MatOfKeyPoint;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.FeatureDetector;
 import org.opencv.features2d.Features2d;
+import org.opencv.features2d.KeyPoint;
 import org.opencv.imgproc.Imgproc;
+
+import android.util.Log;
 
 import com.allan.imgproc.felix.IntrestPoint;
 
@@ -18,7 +21,7 @@ public class CameraInstance {
 	//Camera Rotation
 	public double alpha,beta,gamma;
 	
-	MatOfKeyPoint mkeyPoints;
+    MatOfKeyPoint mkeyPoints;
 	Mat mRgba, mdescriptors, mGray;
 	
 	public CameraInstance(Mat in_mRgba,int width, int height)
@@ -29,34 +32,33 @@ public class CameraInstance {
 		mdescriptors = new Mat();
 	}
 	//Camera translation
-
-	public boolean ExtractDescriptors()
-	{
-		MatOfKeyPoint keyPoints = new MatOfKeyPoint();
-			
-		Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
-	  	FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
-	  	
-	  	featureDetector.detect(mGray, keyPoints);
-	  	mkeyPoints = keyPoints;
-	  	if(mkeyPoints.empty())
-	  		return false;
-	  	Features2d.drawKeypoints(mGray, keyPoints, mRgba);	
-		DescriptorExtractor ext = DescriptorExtractor.create(DescriptorExtractor.BRIEF);
-		
-		ext.compute(mRgba,keyPoints,mdescriptors);
-		
-		return true;
-	}
-	
+    
 	public void freememory()
 	{
+		//Recycle images
 		mRgba.release();
-		mdescriptors.release();
 		mGray.release();
-		mRgba = null;
-		mdescriptors = null;
+		mdescriptors.release();
+	    mRgba = null;
 		mGray = null;
+		mdescriptors = null;
+	}
+	 
+	public void ExtractDescriptors()
+	{
+		mkeyPoints = new MatOfKeyPoint();
+			
+		Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
+	  	FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.ORB);
+	  	
+	  	featureDetector.detect(mGray, mkeyPoints);
+
+	  	Features2d.drawKeypoints(mGray, mkeyPoints, mRgba);	
+		DescriptorExtractor ext = DescriptorExtractor.create(DescriptorExtractor.ORB);
+		ext.compute(mRgba, mkeyPoints, mdescriptors);
+	    //KeyPoint keyp[] = mkeyPoints.toArray();
+		//Log.d("FELIX","keyPoints.get(): " + keyp[0].pt);
+		
 	}
 	
 	public Mat rotationMatrix()

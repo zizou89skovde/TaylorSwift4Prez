@@ -8,18 +8,23 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDMatch;
 import org.opencv.core.MatOfKeyPoint;
+import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Size;
+import org.opencv.features2d.DMatch;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
 import org.opencv.features2d.Features2d;
+import org.opencv.features2d.KeyPoint;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.calib3d.Calib3d;
 
 import com.allan.imgproc.camera.CameraActivity;
 import com.allan.imgproc.opencv.FindFeatures;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -27,8 +32,8 @@ import android.widget.Toast;
 
 import com.allan.imgproc.felix.CameraInstance;
 
-public class FelixActivity extends CameraActivity{
-	private Mat                    mRgba,mRbaold;
+public class FelixActivity<MatOf2dpointf> extends CameraActivity{
+	private Mat                    mRgba;
 	private Mat                    mGray;
 	private CameraInstance[] 	   mycameras = new CameraInstance[20];
 	private int 				   camera_index;
@@ -40,6 +45,8 @@ public class FelixActivity extends CameraActivity{
 	private DescriptorMatcher	   mmatcher;
 	private MatOfDMatch 		   mmatches;
 	private Mat 			       corre;
+	private Vector<Mat> 		   points4D;
+
 	public FelixActivity() throws IOException {
 		super();	
 	}
@@ -55,19 +62,16 @@ public class FelixActivity extends CameraActivity{
 		mmatches = new MatOfDMatch();
 		corre = new Mat(2*height, width, CvType.CV_8UC4);
 	}
-	
 
 	int counter = 0;	
-	
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 		counter++;	
-		if( counter % 1 == 0){
+		if( counter % 2 == 0){
 			counter = 1;
 			mRgba = inputFrame.rgba();
-
-			if(camera_count<20)
-				camera_count++;
+			
+			camera_count++;
 
 			if(camera_index<19)
 				camera_index++;
@@ -128,12 +132,25 @@ public class FelixActivity extends CameraActivity{
 					Log.d("FELIX","abssar");
 					return mRgba;
 			 }
-			Features2d.drawMatches(mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints,mmatches, corre);
-			
+			Features2d.drawMatches( mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints,mmatches, corre);
+
 			mycameras[last_camera_index].freememory();
 			
-			System.gc();
-			//mycameras[last_camera_index];
+			if(camera_count == 2)
+			{
+				//Find fundamental matrix and initialize first two cameras and 3D-points
+				Mat points1 = new Mat(2,mmatches.width(),CvType.CV_64FC1);
+				Mat points2 = new Mat(2,mmatches.width(),CvType.CV_64FC1);
+				
+				findPointPairsFromMatches(mycameras[camera_index].mkeyPoints,mycameras[last_camera_index].mkeyPoints,mmatches,points1,points2);
+				MatOfPoint2f m1 = new MatOfPoint2f(points1);
+				MatOfPoint2f m2 = new MatOfPoint2f(points2);
+				Mat initF = Calib3d.findFundamentalMat(m1, m2);
+			}
+			else
+			{
+				//Use PnP to find new camera matrix and triangulate new 3D-points from new correspondancies
+			}
 			//Oliver
 			Size size = mRgba.size();
 			Imgproc.resize(corre, mRgba, size);
@@ -141,12 +158,13 @@ public class FelixActivity extends CameraActivity{
 			long stopTime = System.currentTimeMillis();
 			long deltaTime = stopTime -startTime;
 			Log.d("FELIX","Computiation time: " + deltaTime);
-			
+			 System.gc();
+			return mycameras[camera_index].mRgba;
 		}
-		
-			return mRgba;
+		return mRgba;
+
 	}
-	
+
 
 	public boolean onTouchEvent(android.view.MotionEvent event) {
 		Toast.makeText(getApplicationContext(),"CAPTURE MOFOCKA", Toast.LENGTH_SHORT).show();
@@ -156,59 +174,77 @@ public class FelixActivity extends CameraActivity{
 		return true; // ifall debuggit testa basts
 	};
 
-	
+
 	public void computeMatches()
 	{
 		if(camera_count<20)
 			camera_count++;
-		
+
 		if(camera_index<19)
 			camera_index++;
 		else
 			camera_index = 0;
-	
+
 		//Toast.makeText(getApplicationContext(),"balle", Toast.LENGTH_SHORT).show();
 		//Log.d("FELIX","asdg");
 		mycameras[camera_index] = new CameraInstance(mRgba,cam_height,cam_width);
 		mycameras[camera_index].ExtractDescriptors();
 		if(camera_count<2)
 			return;
-		
+
 		//Feature matching
 		int last_camera_index;
 		if(camera_index > 0)
 			last_camera_index = camera_index-1;
 		else
 			last_camera_index = 19;	
-		
+
 		mmatcher.match(mycameras[camera_index].mdescriptors, mycameras[last_camera_index].mdescriptors, mmatches);
-		
-		
-		
+
+
+
 		//Features2d.drawMatches(mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints, mmatches, mycameras[camera_index].mGray);
 		Features2d.drawMatches(mycameras[last_camera_index].mRgba, mycameras[last_camera_index].mkeyPoints, mycameras[camera_index].mRgba, mycameras[camera_index].mkeyPoints, mmatches, corre);
 	} 
+	
+	private void findPointPairsFromMatches(MatOfKeyPoint mkeyPoints1,MatOfKeyPoint mkeyPoints2,MatOfDMatch matches1to2, Mat points1, Mat points2)
+	{
+
+		KeyPoint p1[] = mkeyPoints1.toArray();
+		KeyPoint p2[] = mkeyPoints2.toArray();
+		DMatch correspondaneindices[] = matches1to2.toArray();
+		double x1,y1,x2,y2;
+		
+		for(int i = 0; i<matches1to2.width();i++)
+		{
+			points1.put(1, i, p1[correspondaneindices[i].queryIdx].pt.x);
+			points1.put(2, i, p1[correspondaneindices[i].queryIdx].pt.y);
+			
+			points2.put(1, i, p1[correspondaneindices[i].trainIdx].pt.x);
+			points2.put(2, i, p1[correspondaneindices[i].trainIdx].pt.y);
+		}
+	}
 	/*
 	private Mat findFeatures(CvCameraViewFrame inputFrame){
-		
+
 		Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
 		FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.FAST);
 		MatOfKeyPoint keyPoints = new MatOfKeyPoint();
 		featureDetector.detect(mGray, keyPoints);
 		Features2d.drawKeypoints(mGray, keyPoints, mRgba);	
 		return mRgba;
-		
+
 	}
 
 	static final int REQUEST_IMAGE_CAPTURE = 1;
-	
+
 	private void dispatchTakePictureIntent() {
 	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 	    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
 	        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
 	    }
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -218,9 +254,9 @@ public class FelixActivity extends CameraActivity{
 			Log.d("FELIX","CAPTURED BIATCHeeeessss");
 	    }
 	}
-	*/
-	
+	 */
 
-	
-	}
-	
+
+
+}
+
